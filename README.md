@@ -1,318 +1,214 @@
 # K8s-Nexus-Hybrid-Kubernetes-Fabric
 
-# K8s Nexus Hybrid
+# K8s Nexus — Hybrid Multi-Cluster Platform
 
-Hybrid multi-cluster Kubernetes platform connecting the Mavencrest on-prem Kubernetes environment with Azure Kubernetes Service (AKS).
+Hybrid Kubernetes platform connecting a self-managed on-premises Kubernetes cluster with Azure Kubernetes Service (AKS).
 
-The project shows how independently managed Kubernetes clusters can operate as one logical hybrid platform using Azure Arc, GitOps, centralized governance, workload consistency, security controls, and cross-cluster failover.
+The project demonstrates centralized governance, GitOps, workload portability, security controls, observability, and cross-cluster resiliency across cloud and on-prem environments.
 
 ## Architecture
 
-    Git / GitOps
+```mermaid
 
-        |
+flowchart TD
 
-        v
+    Git[Git / GitOps]
 
-    +----------------------+----------------------+
+    Git --> OnPrem[On-Prem Kubernetes]
 
-    |                                             |
+    Git --> AKS[Azure Kubernetes Service]
 
-    v                                             v
+    OnPrem --> Arc[Azure Arc]
 
-    On-Prem Kubernetes                           AKS
+    AKS --> Arc
 
-    kubeadm cluster                              Azure Kubernetes Service
+    Arc --> Governance[Centralized Governance]
 
-    |                                             |
+    Arc --> Observability[Centralized Observability]
 
-    |                                             |
+    Arc --> Policy[Policy & Security]
 
-    +----------------------+----------------------+
+    OnPrem --> Workload[Shared Application Workloads]
 
-                           |
+    AKS --> Workload
 
-                           v
+```
 
-                       Azure Arc
-
-                           |
-
-                           v
-
-                Centralized Management
-
-                           |
-
-          +----------------+----------------+
-
-          |                                 |
-
-          v                                 v
-
-    Policy / Governance             Workload Consistency
-
-          |                                 |
-
-          +----------------+----------------+
-
-                           |
-
-                           v
-
-                  Shared Application
-
-The on-prem cluster and AKS stay independent Kubernetes clusters, but are managed as part of a shared hybrid platform.
+The clusters remain independent Kubernetes environments while operating under a shared hybrid management model.
 
 ## Platform Goals
 
 - Connect self-managed Kubernetes and AKS
 
-- Register the on-prem Kubernetes cluster with Azure Arc
+- Register the on-prem cluster with Azure Arc
 
-- Apply centralized policy and governance
+- Apply centralized governance and Azure Policy
 
-- Maintain consistent configuration through GitOps
+- Maintain Kubernetes configuration through GitOps
 
-- Deploy the same logical workload across both environments
+- Deploy shared workloads across both clusters
 
-- Test active/passive and failover scenarios
-
-- Explore multi-cluster workload placement
+- Test active/passive failover scenarios
 
 - Centralize observability and security controls
 
 - Maintain environment-specific configuration where required
 
-## Hybrid Workload Model
+## Multi-Cluster Workload Model
 
-    Users
+```mermaid
 
-      |
+flowchart LR
 
-      v
+    Users[Users] --> Traffic[Global Traffic Layer]
 
-    Global Traffic Layer
+    Traffic --> AKS[AKS<br/>Primary]
 
-      |
+    Traffic -. Failover .-> OnPrem[On-Prem Kubernetes<br/>Secondary]
 
-      +----------------------+
+    AKS --> App[Application Workload]
 
-      |                      |
+    OnPrem --> App
 
-      v                      v
+```
 
-    AKS                   On-Prem
+The objective is not to merge both environments into one Kubernetes cluster.
 
-    Active                Standby
-
-      |                      |
-
-      +----------+-----------+
-
-                 |
-
-                 v
-
-         Shared Application
-
-The goal is not to merge AKS and on-prem into one Kubernetes cluster.
-
-Instead, the platform uses two independent clusters that can host the same logical workload and support cross-cluster resiliency.
+Instead, AKS and on-prem Kubernetes operate as independent clusters capable of hosting the same logical workload and supporting cross-cluster resiliency.
 
 ## Azure Arc
 
-Azure Arc provides the management layer for bringing the on-prem Kubernetes cluster into Azure.
+Azure Arc extends Azure management capabilities to the on-prem Kubernetes cluster.
 
-Planned capabilities include:
-
-- Centralized governance
+Key capabilities include:
 
 - Azure Policy
 
-- GitOps configuration
+- centralized governance
 
-- Cluster inventory
+- cluster inventory
 
-- Monitoring
+- GitOps integration
 
-- Security integration
+- monitoring
 
-- Consistent management across cloud and on-prem environments
+- security integration
+
+- consistent management across environments
 
 ## GitOps
 
-Git acts as the source of truth for shared Kubernetes configuration.
+Git acts as the source of truth for Kubernetes configuration.
 
-    Git Repository
+```mermaid
 
-          |
+flowchart LR
 
-          v
+    Git[Git Repository] --> Argo[Argo CD]
 
-       Argo CD
+    Argo --> AKS[AKS]
 
-          |
+    Argo --> OnPrem[On-Prem Kubernetes]
 
-          +------------------+
+```
 
-          |                  |
+Shared configuration can be deployed across both clusters while using separate Helm values or overlays for environment-specific differences.
 
-          v                  v
+## High Availability & Failover
 
-    On-Prem Cluster         AKS
+The platform is designed to test workload recovery across cloud and on-prem environments.
 
-Shared Kubernetes configuration can be deployed to both clusters while maintaining separate Helm values or environment-specific overlays where needed.
+Planned scenarios include:
 
-## High Availability and Failover
+- AKS cluster failure
 
-The long-term objective is to test workload resiliency across cloud and on-prem environments.
+- on-prem cluster failure
 
-Normal state:
+- node failure
 
-    Users
+- application failure
 
-      |
+- traffic failover
 
-      v
-
-    AKS
-
-      |
-
-      v
-
-    Application
-
-    On-Prem
-
-    Standby
-
-Failover state:
-
-    AKS unavailable
-
-          |
-
-          v
-
-    Traffic redirected
-
-          |
-
-          v
-
-       On-Prem
-
-          |
-
-          v
-
-     Application
-
-Planned testing includes:
-
-- Cluster failure
-
-- Node failure
-
-- Application failure
-
-- Traffic redirection
-
-- Workload recovery
-
-- Configuration drift
+- configuration drift
 
 - GitOps recovery
 
-- Database availability
+- workload redeployment
 
-- Cross-cluster workload consistency
+- database availability
+
+- cross-cluster workload consistency
 
 ## Security
 
-Security is a major design focus of K8s Nexus Hybrid.
+Security is a core design focus of K8s Nexus.
 
-The platform will use layered controls across both Kubernetes environments, including:
+The platform will use layered security controls including:
 
 - Kubernetes NetworkPolicy
 
 - Cilium microsegmentation
 
-- Least-privilege access
-
-- Azure Policy
+- least-privilege access
 
 - Azure RBAC
 
-- Workload identity
+- Azure Policy
 
-- Centralized secrets management
+- workload identity
 
-- Controlled service-to-service communication
+- centralized secrets management
 
-- Default-deny workload networking where appropriate
+- controlled service-to-service communication
 
-The objective is to reduce lateral movement and limit the blast radius of a compromised workload across both clusters.
+- default-deny network policies where appropriate
 
-Example:
+Microsegmentation is used to limit lateral movement and reduce the blast radius of compromised workloads.
 
-    Frontend
+```mermaid
 
-       |
+flowchart LR
 
-       +------> User Service
+    Frontend[Frontend] --> UserService[User Service]
 
-       |
+    Frontend --> Balance[Balance Service]
 
-       +------> Balance Service
+    Frontend -. Blocked .-> Database[(Database)]
 
-       |
+    Unauthorized[Unauthorized Pod] -. Blocked .-> Internal[Internal Services]
 
-       X------> Database
-
-    Unauthorized Pod
-
-       |
-
-       X------> Internal Services
+```
 
 ## Platform Stack
 
-- Kubernetes
+| Area | Technologies |
 
-- AKS
+|---|---|
 
-- kubeadm
+| Kubernetes | AKS, kubeadm |
 
-- Azure Arc
+| Hybrid Management | Azure Arc |
 
-- Terraform
+| Infrastructure | Terraform |
 
-- Argo CD
+| GitOps | Argo CD, Helm |
 
-- Helm
+| Networking | Azure CNI, Cilium, Flannel |
 
-- Cilium
+| Security | NetworkPolicy, Azure Policy, Azure RBAC |
 
-- Azure Policy
+| Observability | Prometheus, Grafana |
 
-- Azure RBAC
+| CI/CD | GitHub Actions, Azure DevOps |
 
-- Prometheus
+| Traffic | Cloudflare / Global Traffic Routing |
 
-- Grafana
-
-- GitHub Actions / Azure DevOps
-
-- Cloudflare / global traffic routing
-
-## Relationship to Existing Projects
+## Related Platforms
 
 ### Mavencrest On-Prem Kubernetes
 
-Focuses on self-managed Kubernetes fundamentals and operations:
+Self-managed Kubernetes environment focused on:
 
 - kubeadm
 
@@ -321,8 +217,6 @@ Focuses on self-managed Kubernetes fundamentals and operations:
 - worker nodes
 
 - Flannel
-
-- pod networking
 
 - persistent storage
 
@@ -336,7 +230,7 @@ Focuses on self-managed Kubernetes fundamentals and operations:
 
 ### AKS Mavencrest Platform
 
-Focuses on managed Kubernetes and Azure-native platform engineering:
+Azure-hosted Kubernetes platform focused on:
 
 - AKS
 
@@ -354,38 +248,16 @@ Focuses on managed Kubernetes and Azure-native platform engineering:
 
 - autoscaling
 
-- Azure Container Registry
+- ACR
 
-- Azure identity
+- workload identity
 
 - observability
 
 - microsegmentation
 
-### K8s Nexus Hybrid
-
-Connects both environments into a shared hybrid operating model.
-
-The project focuses on:
-
-- hybrid Kubernetes management
-
-- Azure Arc
-
-- multi-cluster GitOps
-
-- shared policy
-
-- workload portability
-
-- cross-cluster failover
-
-- centralized security
-
-- centralized observability
-
 ## Project Objective
 
-K8s Nexus Hybrid demonstrates the progression from operating individual Kubernetes environments to engineering a hybrid multi-cluster platform including on-prem and cloud workloads.
+K8s Nexus demonstrates the progression from operating independent Kubernetes environments to engineering a hybrid multi-cluster platform spanning on-premises infrastructure and Azure.
 
-The final architecture is intended to show that the same logical workload can be securely deployed, governed, observed, and recovered across both self-managed Kubernetes and Azure Kubernetes Service.
+The final architecture is designed to show that the same logical workload can be securely deployed, governed, observed, and recovered across both self-managed Kubernetes and AKS.
