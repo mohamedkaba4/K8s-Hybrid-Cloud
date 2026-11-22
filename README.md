@@ -1,10 +1,11 @@
-# K8s-Nexus-Hybrid-Kubernetes-Fabric
+# K8s-Hybrid-Cloud
 
-# K8s Nexus — Hybrid Multi-Cluster Platform
+# K8s Nexus | On-Premises · Azure AKS · Azure Arc
+
 
 Hybrid Kubernetes platform connecting a self-managed on-premises Kubernetes cluster with Azure Kubernetes Service (AKS).
 
-The project demonstrates centralized governance, GitOps, workload portability, security controls, observability, and cross-cluster resiliency across cloud and on-prem environments.
+The infrastructure demonstrates centralized governance, GitOps, workload portability, security controls, observability, and cross-cluster resiliency across cloud and on-prem environments.
 
 ## Architecture
 
