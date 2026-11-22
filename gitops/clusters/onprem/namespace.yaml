@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mavencrest-gitops-test
+  labels:
+    managed-by: flux
+    environment: onprem
