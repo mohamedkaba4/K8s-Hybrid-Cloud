@@ -1,7 +1,4 @@
-# K8s-Hybrid-Cloud
-
 # K8s Nexus | On-Premises · Azure AKS · Azure Arc
-
 
 Hybrid Kubernetes platform connecting a self-managed on-premises Kubernetes cluster with Azure Kubernetes Service (AKS).
 
