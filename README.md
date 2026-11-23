@@ -1,6 +1,6 @@
 # K8s Nexus | On-Premises · Azure AKS · Azure Arc
 
-Hybrid Kubernetes platform connecting a self-managed on-premises Kubernetes cluster with Azure Kubernetes Service (AKS).
+Hybrid Kubernetes platform connecting a self-managed [on-premises Kubernetes cluster](https://github.com/mohamedkaba4/Kubernetes-DockingStation) with [Azure Kubernetes Service (AKS)](https://github.com/mohamedkaba4/AKS-Platform).
 
 The infrastructure demonstrates centralized governance, GitOps, workload portability, security controls, observability, and cross-cluster resiliency across cloud and on-prem environments.
 
