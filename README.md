@@ -6,22 +6,31 @@ The infrastructure demonstrates centralized governance, GitOps, workload portabi
 
 ## Architecture
 
-
 ```mermaid
 flowchart TD
     A[Git / GitOps]
 
-    A --> B[On-Prem Kubernetes]
-    A --> C[Azure Kubernetes Service]
+    subgraph ONPREM[On-Premises Environment]
+        B[On-Prem Kubernetes]
+        D[Application Workloads]
+        F[Azure Arc]
+        B --> D
+        B -.-> F
+    end
 
-    B --> D[Application Workloads]
-    C --> E[Application Workloads]
+    subgraph AZURE[Azure Cloud Environment]
+        C[Azure AKS]
+        E[Application Workloads]
+        G[Azure Native Management]
+        C --> E
+        C -.-> G
+    end
 
-    B -.-> F[Azure Arc]
-    C -.-> G[Azure Native Management]
+    A --> ONPREM
+    A --> AZURE
 
-    F --> H[Centralized Management]
-    G --> H
+    ONPREM --> H[Centralized Management]
+    AZURE --> H
 
     H --> I[Governance]
     H --> J[Observability]
