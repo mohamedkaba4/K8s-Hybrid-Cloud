@@ -12,31 +12,32 @@ arc.mavencrest.site	Main HA URL — automatic failover
 
 ## Architecture
 
+
 ```mermaid
-
 flowchart TD
+    A[Git / GitOps]
 
-    Git[Git / GitOps]
+    A --> B[On-Prem Kubernetes]
+    A --> C[Azure Kubernetes Service]
 
-    Git --> OnPrem[On-Prem Kubernetes]
+    B --> D[Application Workloads]
+    C --> E[Application Workloads]
 
-    Git --> AKS[Azure Kubernetes Service]
+    B -.-> F[Azure Arc]
+    C -.-> G[Azure Native Management]
 
-    OnPrem --> Arc[Azure Arc]
+    F --> H[Centralized Management]
+    G --> H
 
-    AKS --> Arc
-
-    Arc --> Governance[Centralized Governance]
-
-    Arc --> Observability[Centralized Observability]
-
-    Arc --> Policy[Policy & Security]
-
-    OnPrem --> Workload[Shared Application Workloads]
-
-    AKS --> Workload
-
+    H --> I[Governance]
+    H --> J[Observability]
+    H --> K[Policy & Security]
 ```
+
+The clusters remain independent Kubernetes environments
+while operating under a unified hybrid management model,
+with consistent workload deployment, centralized governance,
+observability, and security controls.
 
 The clusters remain independent Kubernetes environments while operating under a shared hybrid management model.
 
