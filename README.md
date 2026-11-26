@@ -4,6 +4,12 @@ Hybrid Kubernetes platform connecting a self-managed on-premises Kubernetes clus
 
 The infrastructure demonstrates centralized governance, GitOps, workload portability, security controls, observability, and cross-cluster resiliency across cloud and on-prem environments.
 
+Links: 
+k8.mavencrest.shop	On-prem Kubernetes storefront
+aks.arc.mavencrest.site	Azure AKS storefront
+arc.mavencrest.site	Main HA URL — automatic failover
+(These links are mainly active when I am either building, testing, or running a demo)
+
 ## Architecture
 
 ```mermaid
